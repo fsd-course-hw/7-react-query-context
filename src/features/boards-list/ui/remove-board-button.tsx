@@ -1,4 +1,4 @@
-import { BoardPartial } from "@/entities/board";
+import { BoardPartial } from "../model/types";
 import { useRemoveBoard } from "../model/use-remove-board";
 import { RemoveIcon } from "@/shared/ui/ui-icons";
 

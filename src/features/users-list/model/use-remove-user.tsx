@@ -1,11 +1,22 @@
-import { useUsers } from "@/entities/user";
 import { useGetConfirmation } from "@/shared/lib/confirmation";
-import { useUsersLisetDesp } from "../deps";
+import { useMutation } from "@tanstack/react-query";
+import { usersApi } from "@/shared/api/modules/user";
+import { useInvaliateUsersList } from "@/entities/user";
+import { useInvalidateSession } from "@/entities/session";
 
 export function useRemoveUser() {
-  const { onBeforeRemoveUser } = useUsersLisetDesp();
+  const invalidateUsers = useInvaliateUsersList();
+  const invalidateSession = useInvalidateSession();
+
+  const removeUserMutation = useMutation({
+    mutationFn: usersApi.removeUser,
+    async onSettled() {
+      await invalidateSession();
+      await invalidateUsers();
+    },
+  });
+
   const getConfirmation = useGetConfirmation();
-  const removeUser = useUsers((s) => s.removeUser);
 
   return async (userId: string) => {
     const confirmation = await getConfirmation({
@@ -14,8 +25,6 @@ export function useRemoveUser() {
 
     if (!confirmation) return;
 
-    onBeforeRemoveUser(userId);
-
-    await removeUser(userId);
+    await removeUserMutation.mutateAsync(userId);
   };
 }

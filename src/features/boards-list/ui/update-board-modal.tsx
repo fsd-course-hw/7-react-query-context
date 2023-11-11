@@ -3,8 +3,8 @@ import { UiButton } from "@/shared/ui/ui-button";
 import { Controller, useForm } from "react-hook-form";
 import { UiTextField } from "@/shared/ui/ui-text-field";
 import { useUpdateBoard } from "../model/use-update-board";
-import { BoardPartial, UpdateBoardData } from "@/entities/board";
 import { UserMultiSelect, UserSelect } from "@/entities/user";
+import { BoardPartial, UpdateBoardFormData } from "../model/types";
 
 export function UpdateBoardModal({
   onClose,
@@ -13,7 +13,7 @@ export function UpdateBoardModal({
   onClose: () => void;
   board: BoardPartial;
 }) {
-  const { control, handleSubmit } = useForm<UpdateBoardData>({
+  const { control, handleSubmit } = useForm<UpdateBoardFormData>({
     defaultValues: board,
   });
 

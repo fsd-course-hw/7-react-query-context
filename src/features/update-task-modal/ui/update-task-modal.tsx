@@ -1,7 +1,8 @@
 import { UiModal } from "@/shared/ui/ui-modal";
 import { UiButton } from "@/shared/ui/ui-button";
 import { UpdateTaskForm } from "./update-task-form";
-import { Task } from "@/entities/task";
+import { useTask } from "../model/use-task";
+import { Task } from "../model/types";
 
 export function UpdateTaskModal({
   onClose,
@@ -10,9 +11,13 @@ export function UpdateTaskModal({
   onClose: (task?: Task) => void;
   taskId: string;
 }) {
+  const task = useTask(taskId);
+
+  if (!task) return;
+
   return (
     <UiModal isOpen onClose={onClose} width="md">
-      <UpdateTaskForm onSuccess={onClose} taskId={taskId}>
+      <UpdateTaskForm onSuccess={onClose} task={task}>
         <UiModal.Header>
           <h1>Редактирование задачи</h1>
         </UiModal.Header>

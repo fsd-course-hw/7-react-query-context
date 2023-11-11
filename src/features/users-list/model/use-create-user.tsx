@@ -1,4 +1,7 @@
-import { useUsers } from "@/entities/user";
+import { useInvaliateUsersList } from "@/entities/user";
+import { usersApi } from "@/shared/api/modules/user";
+import { useMutation } from "@tanstack/react-query";
+import { nanoid } from "nanoid";
 
 export type CreateUserFormData = {
   name: string;
@@ -6,8 +9,16 @@ export type CreateUserFormData = {
 };
 
 export function useCreateUser() {
-  const { createUser } = useUsers();
+  const invalidateUsers = useInvaliateUsersList();
+
+  const createUserMutation = useMutation({
+    mutationFn: usersApi.addUser,
+    async onSettled() {
+      await invalidateUsers();
+    },
+  });
+
   return (data: CreateUserFormData) => {
-    createUser?.(data);
+    createUserMutation.mutate({ ...data, id: nanoid() });
   };
 }

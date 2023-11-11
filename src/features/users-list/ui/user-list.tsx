@@ -1,12 +1,18 @@
-import { UserPreview, useUsers } from "@/entities/user";
-import { useUsersLisetDesp } from "../deps";
+import { UserPreview } from "@/entities/user";
 import { useRemoveUser } from "../model/use-remove-user";
 import { RemoveIcon } from "@/shared/ui/ui-icons";
+import { User } from "../model/types";
+import { useUsersList } from "../model/use-users-list";
 
-export function UsersList({ className }: { className?: string }) {
-  const { users } = useUsers();
+export function UsersList({
+  className,
+  renderUserAuthAction,
+}: {
+  className?: string;
+  renderUserAuthAction: (user: User) => React.ReactNode;
+}) {
+  const users = useUsersList();
   const removeUser = useRemoveUser();
-  const { renderUserAuthAction } = useUsersLisetDesp();
 
   return (
     <div className={className}>

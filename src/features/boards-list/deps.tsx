@@ -1,5 +1,5 @@
-import { BoardPartial } from "@/entities/board";
 import { createStrictContext, useStrictContext } from "@/shared/lib/react";
+import { BoardPartial } from "./model/types";
 
 type BoardsListDeps = {
   canCreateBoard: () => boolean;

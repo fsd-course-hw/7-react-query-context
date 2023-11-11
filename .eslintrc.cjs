@@ -5,6 +5,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
@@ -86,14 +87,14 @@ module.exports = {
                 },
               ],
             ],
-            allow: "index.ts",
+            allow: "index.(ts|tsx)",
           },
           {
             target: [
               [
                 "shared",
                 {
-                  segment: "ui", // ("ui"|"constants")
+                  segment: "(ui|api)", // ("ui"|"constants")
                 },
               ],
             ],

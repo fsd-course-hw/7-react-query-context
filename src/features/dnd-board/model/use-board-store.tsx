@@ -1,45 +1,23 @@
 import { createStrictContext, useStrictContext } from "@/shared/lib/react";
+import { Board, BoardCard } from "./types";
 
-import { useEffect, useState } from "react";
-import { Board, boardsRepository } from "@/entities/board";
-import { StoreApi, UseBoundStore } from "zustand";
-import { BoardStore, createBoardStore } from "./board.store";
-import { useGetConfirmation } from "@/shared/lib/confirmation";
-import { boardDepsContext } from "../deps";
+export type BoardStore = {
+  board: Board;
 
-export const boardStoreContext =
-  createStrictContext<UseBoundStore<StoreApi<BoardStore>>>();
+  addColumn: (title: string) => Promise<void>;
+  updateColumn: (id: string, title: string) => Promise<void>;
+  removeColumn: (id: string) => Promise<void>;
+  moveColumn: (index: number, newIndex: number) => Promise<void>;
 
-export const useBoardStore = () => {
-  const useSelector = useStrictContext(boardStoreContext);
-  return { useSelector };
+  addBoardCard: (colId: string, title: string) => Promise<void>;
+  updateBoardCard: (colId: string, boardCard: BoardCard) => Promise<void>;
+  removeBoardCard: (colId: string, boardCardId: string) => Promise<void>;
+  moveBoardCard: (
+    start: { colId: string; index: number },
+    end: { colId: string; index: number },
+  ) => Promise<void>;
 };
 
-export const useFetchBoard = (boardId?: string) => {
-  const [board, setBoard] = useState<Board>();
+export const boardStoreContext = createStrictContext<BoardStore>();
 
-  useEffect(() => {
-    if (!boardId) {
-      return;
-    }
-    boardsRepository.getBoard(boardId).then((board) => {
-      if (!board) {
-        return;
-      }
-      setBoard(board);
-    });
-  }, [boardId]);
-
-  return { board };
-};
-
-export const useBoardStoreFactory = (board: Board) => {
-  const getConfirmation = useGetConfirmation();
-  const deps = useStrictContext(boardDepsContext);
-
-  const [boardStore] = useState(() => {
-    return createBoardStore({ board, getConfirmation, itemStore: deps });
-  });
-
-  return { boardStore };
-};
+export const useBoardStore = () => useStrictContext(boardStoreContext);

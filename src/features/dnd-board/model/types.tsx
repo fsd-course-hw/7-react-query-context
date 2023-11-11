@@ -1,10 +1,3 @@
-export type BoardPartial = {
-  id: string;
-  title: string;
-  ownerId: string;
-  editorsIds: string[];
-};
-
 export type Board = {
   id: string;
   title: string;
@@ -22,7 +15,11 @@ export type BoardCol = {
 export type BoardCard = {
   id: string;
   title: string;
-  assigneeId?: string;
+  assignee?: {
+    id: string;
+    name: string;
+    avatarId: string;
+  };
 };
 
 export type CreateBoardData = {

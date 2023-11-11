@@ -1,12 +1,22 @@
 import { useGetConfirmation } from "@/shared/lib/confirmation";
-import { BoardPartial, useBoards } from "@/entities/board";
+import { useInvaliateBoardsList } from "@/entities/board";
 import { useBoardsListDeps } from "../deps";
+import { useMutation } from "@tanstack/react-query";
+import { boardsApi } from "@/shared/api/modules/board";
+import { BoardPartial } from "./types";
 
 export function useRemoveBoard() {
+  const invalidateList = useInvaliateBoardsList();
+
+  const removeBoardMutation = useMutation({
+    mutationFn: boardsApi.removeBoard,
+    async onSettled() {
+      await invalidateList();
+    },
+  });
+
   const getConfirmation = useGetConfirmation();
   const { canRemoveBoard } = useBoardsListDeps();
-
-  const { removeBoard } = useBoards();
 
   return async (board: BoardPartial) => {
     const confirmation = await getConfirmation({
@@ -15,6 +25,6 @@ export function useRemoveBoard() {
 
     if (!confirmation || !canRemoveBoard(board)) return;
 
-    removeBoard(board.id);
+    removeBoardMutation.mutate(board.id);
   };
 }

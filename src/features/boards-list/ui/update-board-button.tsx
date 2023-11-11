@@ -2,7 +2,7 @@ import { UpdateIcon } from "@/shared/ui/ui-icons";
 import clsx from "clsx";
 import { useState } from "react";
 import { UpdateBoardModal } from "./update-board-modal";
-import { BoardPartial } from "@/entities/board";
+import { BoardPartial } from "../model/types";
 
 export function UpdateBoardButton({
   className,

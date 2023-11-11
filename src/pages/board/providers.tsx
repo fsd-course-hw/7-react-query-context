@@ -1,7 +1,6 @@
-import { Board as BoardType } from "@/entities/board";
-import { Session } from "@/entities/session";
-import { useTasks } from "@/entities/task";
+import { usersListQuery } from "@/entities/user";
 import {
+  BoardType,
   boardDepsContext,
   boardStoreContext,
   useBoardStoreFactory,
@@ -10,6 +9,9 @@ import {
   updateTaskModalDeps,
   useUpdateTaskModal,
 } from "@/features/update-task-modal";
+import { listToRecord } from "@/shared/lib/record";
+import { useQuery } from "@tanstack/react-query";
+import { memo } from "react";
 
 export function TaskEditorProvider({
   children,
@@ -32,26 +34,27 @@ export function TaskEditorProvider({
 
 export function BoardDepsProvider({
   children,
-  sesson,
 }: {
   children?: React.ReactNode;
-  sesson: Session;
 }) {
-  const removeTask = useTasks((s) => s.removeTask);
-  const createTask = useTasks((s) => s.createTask);
   const { modal, updateTask } = useUpdateTaskModal();
+  const { data: usersMap } = useQuery({
+    ...usersListQuery(),
+    select: listToRecord,
+  });
 
   return (
     <boardDepsContext.Provider
       value={{
-        createBoardCard: async (title: string) => {
-          return await createTask({ authorId: sesson.userId, title });
-        },
-        onBeforeRemoveBoardCard: async (id: string) => {
-          await removeTask(id);
-        },
         updateBoardCard: async (board) => {
-          return await updateTask(board.id);
+          const task = await updateTask(board.id);
+          if (!task || !usersMap) return;
+
+          return {
+            id: task.id,
+            title: task.title,
+            assignee: task.assigneeId ? usersMap[task.assigneeId] : undefined,
+          };
         },
       }}
     >
@@ -61,17 +64,17 @@ export function BoardDepsProvider({
   );
 }
 
-export function BoardStoreProvider({
+export const BoardStoreProvider = memo(function BoardStoreProvider({
   children,
   board,
 }: {
   children?: React.ReactNode;
   board: BoardType;
 }) {
-  const { boardStore } = useBoardStoreFactory(board);
+  const boardStore = useBoardStoreFactory(board);
   return (
     <boardStoreContext.Provider value={boardStore}>
       {children}
     </boardStoreContext.Provider>
   );
-}
+});

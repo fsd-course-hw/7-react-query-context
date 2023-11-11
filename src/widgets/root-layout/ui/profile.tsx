@@ -1,8 +1,8 @@
-import { useSession } from "@/entities/session";
+import { useSesssion } from "@/entities/session";
 import { getAvatarUrl } from "@/entities/user";
 
 export function Profile() {
-  const { currentSession } = useSession();
+  const currentSession = useSesssion();
 
   if (!currentSession) return null;
 

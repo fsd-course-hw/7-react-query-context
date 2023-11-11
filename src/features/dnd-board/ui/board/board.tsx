@@ -1,13 +1,11 @@
 import clsx from "clsx";
-import { useBoardStore } from "../../model/use-board-store";
 import { BoardColumn } from "./board-column";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useBoardStore } from "../..";
 
 export function Board({ className }: { className?: string }) {
-  const boardStore = useBoardStore();
-  const columns = boardStore.useSelector((s) => s.board.cols);
-  const moveColumn = boardStore.useSelector((s) => s.moveColumn);
-  const moveCard = boardStore.useSelector((s) => s.moveBoardCard);
+  const { board, moveColumn, moveBoardCard } = useBoardStore();
+  const columns = board.cols;
 
   return (
     <DragDropContext
@@ -19,7 +17,7 @@ export function Board({ className }: { className?: string }) {
         }
         if (e.type === "card") {
           if (e.destination) {
-            moveCard(
+            moveBoardCard(
               {
                 colId: e.source.droppableId,
                 index: e.source.index,

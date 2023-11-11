@@ -1,12 +1,12 @@
 import clsx from "clsx";
-import { BoardCol } from "@/entities/board";
 import { DotsSixVertical, RemoveIcon, UpdateIcon } from "@/shared/ui/ui-icons";
 import { useState } from "react";
 import { UpdateColumnModal } from "../modals/update-column-modal";
 import { Draggable } from "react-beautiful-dnd";
 import { AddBoardCard } from "../add-board-card";
-import { useBoardStore } from "../../model/use-board-store";
 import { BoardCards } from "./board-cards";
+import { useRemoveColumn } from "../../model/use-remove-column";
+import { BoardCol } from "../../model/types";
 
 export function BoardColumn({
   col,
@@ -18,7 +18,7 @@ export function BoardColumn({
   index: number;
 }) {
   const [updateColumnModalOpen, setUpdateColumnModalOpen] = useState(false);
-  const removeColumn = useBoardStore().useSelector((s) => s.removeColumn);
+  const removeColumn = useRemoveColumn(col);
 
   return (
     <Draggable draggableId={col.id} index={index} key={col.id}>
@@ -47,7 +47,7 @@ export function BoardColumn({
             </button>
             <button
               className="text-rose-600 p-1 rounded-full hover:bg-rose-100 transition-all opacity-0 action"
-              onClick={() => removeColumn(col.id)}
+              onClick={() => removeColumn()}
             >
               <RemoveIcon className="w-4 h-4" />
             </button>

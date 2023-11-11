@@ -1,5 +1,19 @@
-import { useSession } from "@/entities/session";
+import { useInvalidateSession } from "@/entities/session";
+import { authApi } from "@/shared/api/modules/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export function useSignOut() {
-  return useSession((s) => s.removeSession);
+  const invalidateSession = useInvalidateSession();
+  const signOutMutation = useMutation({
+    mutationFn: () => {
+      return authApi.signOut();
+    },
+    async onSuccess() {
+      await invalidateSession();
+    },
+  });
+
+  return () => {
+    return signOutMutation.mutate();
+  };
 }

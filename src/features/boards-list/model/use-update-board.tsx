@@ -1,21 +1,32 @@
-import { BoardPartial, UpdateBoardData, useBoards } from "@/entities/board";
 import { useGetConfirmation } from "@/shared/lib/confirmation";
 import { useBoardsListDeps } from "../deps";
-import { useSession } from "@/entities/session";
+import { useSesssion } from "@/entities/session";
+import { useMutation } from "@tanstack/react-query";
+import { boardsApi } from "@/shared/api/modules/board";
+import { BoardPartial, UpdateBoardFormData } from "./types";
+import { useInvaliateBoardsList } from "@/entities/board";
 
 export function useUpdateBoard(board?: BoardPartial) {
   const getConfirmation = useGetConfirmation();
-
   const { canUpdateBoard } = useBoardsListDeps();
+  const invalidateList = useInvaliateBoardsList();
 
-  const ownerId = useSession((s) => s.currentSession?.userId);
+  const session = useSesssion();
 
-  const updateModalRaw = useBoards((s) => s.updateBoard);
+  const updateBoardMutation = useMutation({
+    mutationFn: boardsApi.updateBoard,
+    async onSettled() {
+      await invalidateList();
+    },
+  });
 
-  const updateBoard = async (data: UpdateBoardData, onUpdate: () => void) => {
+  const updateBoard = async (
+    data: UpdateBoardFormData,
+    onUpdate: () => void,
+  ) => {
     if (!board || !canUpdateBoard(board)) return;
 
-    if (ownerId !== data.ownerId) {
+    if (session?.userId !== data.ownerId) {
       const confirmation = await getConfirmation({
         description:
           "Вы действительно хотите передать доску другому пользователю?",
@@ -24,8 +35,15 @@ export function useUpdateBoard(board?: BoardPartial) {
       if (!confirmation) return;
     }
 
-    await updateModalRaw(board.id, data);
-    onUpdate();
+    updateBoardMutation.mutate(
+      {
+        id: board.id,
+        ...data,
+      },
+      {
+        onSuccess: () => onUpdate(),
+      },
+    );
   };
 
   return { updateBoard };

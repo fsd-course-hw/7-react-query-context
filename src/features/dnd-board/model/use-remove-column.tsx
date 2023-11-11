@@ -1,12 +1,12 @@
-import { BoardCol } from "@/entities/board";
 import { useGetConfirmation } from "@/shared/lib/confirmation";
-import { useBoardStore } from "./use-board-store";
+import { useBoardStore } from "..";
+import { BoardCol } from "./types";
 
 export function useRemoveColumn(col: BoardCol) {
   const getConfirmation = useGetConfirmation();
-  const removeColumn = useBoardStore().useSelector((s) => s.removeColumn);
+  const { removeColumn } = useBoardStore();
 
-  const handleRemove = async () => {
+  return async () => {
     const confirmatin = await getConfirmation({
       title: "Удаление колонки",
       description: "Вы уверены, что хотите удалить эту колонку?",
@@ -18,6 +18,4 @@ export function useRemoveColumn(col: BoardCol) {
 
     removeColumn(col.id);
   };
-
-  return { handleRemove };
 }

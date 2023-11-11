@@ -1,13 +1,19 @@
-import { useSession } from "@/entities/session";
-import { User } from "@/entities/user";
+import { useInvalidateSession } from "@/entities/session";
+import { authApi } from "@/shared/api/modules/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export function useSignInUser() {
-  const createSession = useSession((s) => s.createSession);
+  const invalidateSession = useInvalidateSession();
+  const authUserMutation = useMutation({
+    mutationFn: (userId: string) => {
+      return authApi.signInAsUser(userId);
+    },
+    async onSuccess() {
+      await invalidateSession();
+    },
+  });
 
-  return (user: User) => {
-    createSession({
-      userId: user.id,
-      ...user,
-    });
+  return (userId: string) => {
+    return authUserMutation.mutate(userId);
   };
 }

@@ -1,18 +1,35 @@
-import { CreateBoardData, useBoards } from "@/entities/board";
+import { useSesssion } from "@/entities/session";
 import { useBoardsListDeps } from "../deps";
-import { useSession } from "@/entities/session";
+import { useMutation } from "@tanstack/react-query";
+import { boardsApi } from "@/shared/api/modules/board";
+import { useInvaliateBoardsList } from "@/entities/board";
+import { CreateBoardFormData } from "./types";
 
 export function useCreateBoard() {
-  const createBoardRaw = useBoards((s) => s.createBoard);
+  const invalidateList = useInvaliateBoardsList();
+  const session = useSesssion();
+
+  const createBoardMutation = useMutation({
+    mutationFn: boardsApi.createBoard,
+    async onSettled() {
+      await invalidateList();
+    },
+  });
+
   const { canCreateBoard } = useBoardsListDeps();
-  const ownerId = useSession((s) => s.currentSession?.userId);
 
-  const createBoard = async (data: CreateBoardData, onCreate: () => void) => {
-    if (!canCreateBoard() || !ownerId) return;
+  const createBoard = async (
+    data: CreateBoardFormData,
+    onCreate: () => void,
+  ) => {
+    if (!canCreateBoard() || !session?.userId) return;
 
-    await createBoardRaw({ ...data, ownerId: ownerId });
-
-    onCreate();
+    createBoardMutation.mutate(
+      { ...data, ownerId: session.userId },
+      {
+        onSuccess: () => onCreate(),
+      },
+    );
   };
 
   return { createBoard };

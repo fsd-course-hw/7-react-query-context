@@ -1,5 +1,4 @@
-import { useSession } from "@/entities/session";
-import { Board, BoardActions, useFetchBoard } from "@/features/dnd-board";
+import { Board, BoardActions, useBoard } from "@/features/dnd-board";
 import { ComposeChildren } from "@/shared/lib/react";
 import { UiPageSpinner } from "@/shared/ui/ui-page-spinner";
 import { useParams } from "react-router-dom";
@@ -8,13 +7,14 @@ import {
   BoardStoreProvider,
   TaskEditorProvider,
 } from "./providers";
+import { useSesssion } from "@/entities/session";
 
 export function BoardPage() {
   const params = useParams<"boardId">();
   const boardId = params.boardId;
-  const sesson = useSession((s) => s.currentSession);
+  const sesson = useSesssion();
 
-  const { board } = useFetchBoard(boardId);
+  const board = useBoard(boardId);
 
   if (!sesson) {
     return <div>Не авторизован</div>;
@@ -27,7 +27,7 @@ export function BoardPage() {
   return (
     <ComposeChildren>
       <TaskEditorProvider board={board} />
-      <BoardDepsProvider sesson={sesson} />
+      <BoardDepsProvider />
       <BoardStoreProvider board={board} />
       <div className="flex flex-col py-3 px-4 grow">
         <h1 className="text-3xl mb-4 shrink-0 ">{board?.title}</h1>

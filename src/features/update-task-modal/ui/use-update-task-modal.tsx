@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Task } from "@/entities/task";
 import { UpdateTaskModal } from "./update-task-modal";
+import { Task } from "../model/types";
 
 export function useUpdateTaskModal() {
   const [modalProps, setModalProps] = useState<{

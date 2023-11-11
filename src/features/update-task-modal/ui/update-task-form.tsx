@@ -1,4 +1,3 @@
-import { Task, UpdateTaskData, useTasks } from "@/entities/task";
 import {
   useFormContext,
   FormProvider,
@@ -10,25 +9,28 @@ import { UiTextField } from "@/shared/ui/ui-text-field";
 import { UserSelect } from "@/entities/user";
 import { useStrictContext } from "@/shared/lib/react";
 import { updateTaskModalDeps } from "../deps";
+import { Task, UpdateTaskFormData } from "../model/types";
+import { useUpdateTask } from "../model/use-update-task";
 
 export function UpdateTaskForm({
   children,
   onSuccess,
-  taskId,
+  task,
 }: {
   children?: React.ReactNode;
-  onSuccess: (task: Task) => void;
-  taskId: string;
+  onSuccess: (task?: Task) => void;
+  task: Task;
 }) {
-  const task = useTasks((s) => s.getTaskById(taskId));
-  const updateTask = useTasks((s) => s.updateTask);
+  const updateTask = useUpdateTask(task.id);
 
-  const form = useForm<UpdateTaskData>({
+  const form = useForm<UpdateTaskFormData>({
     defaultValues: task,
   });
 
   const handleSumit = form.handleSubmit(async (data) => {
-    const newTask = await updateTask(taskId, data);
+    const newTask = await updateTask(data);
+    console.log(newTask);
+
     onSuccess(newTask);
   });
 
@@ -40,7 +42,7 @@ export function UpdateTaskForm({
 }
 
 UpdateTaskForm.Fields = function Fields() {
-  const { control } = useFormContext<UpdateTaskData>();
+  const { control } = useFormContext<UpdateTaskFormData>();
   const { canAssigneUserToTask } = useStrictContext(updateTaskModalDeps);
 
   return (

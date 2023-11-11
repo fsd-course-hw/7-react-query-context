@@ -1,5 +1,7 @@
-import { User, UserPreview, useUsers } from "@/entities/user";
+import { UserPreview, usersListQuery } from "@/entities/user";
+import { UserDto } from "@/shared/api/modules/user";
 import { UiSelect } from "@/shared/ui/ui-select-field";
+import { useQuery } from "@tanstack/react-query";
 
 export function UserSelect({
   className,
@@ -17,14 +19,19 @@ export function UserSelect({
   label?: string;
   onChangeUserId: (id?: string) => void;
   required?: boolean;
-  filterOptions?: (option: User) => boolean;
+  filterOptions?: (option: UserDto) => boolean;
 }) {
-  const user = useUsers((s) => (userId ? s.getUserById(userId) : undefined));
-  const users = useUsers((s) => s.users.filter(filterOptions));
+  const { data: users } = useQuery({
+    ...usersListQuery(),
+    select: (data) => data.filter(filterOptions),
+    initialData: [],
+  });
+
+  const user = users.find((user) => user.id === userId);
 
   const options = required ? users : [undefined, ...users];
 
-  const onChangeUser = (user?: User) => {
+  const onChangeUser = (user?: UserDto) => {
     onChangeUserId(user?.id);
   };
 

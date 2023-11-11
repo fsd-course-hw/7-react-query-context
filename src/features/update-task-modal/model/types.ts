@@ -6,16 +6,8 @@ export type Task = {
   authorId: string;
 };
 
-export type CreateTaskData = {
+export type UpdateTaskFormData = {
   title: string;
-  description?: string;
-  assigneeId?: string;
-  authorId: string;
-};
-
-export type UpdateTaskData = {
-  title?: string;
-  authorId?: string;
   description?: string;
   assigneeId?: string;
 };

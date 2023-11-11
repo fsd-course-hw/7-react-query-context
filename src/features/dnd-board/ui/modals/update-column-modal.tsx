@@ -11,12 +11,8 @@ export function UpdateColumnModal({
   columnId: string;
   onClose: () => void;
 }) {
-  const boardStore = useBoardStore();
-
-  const col = boardStore.useSelector((s) =>
-    s.board.cols.find((c) => c.id === columnId),
-  );
-  const updateColumn = useBoardStore().useSelector((s) => s.updateColumn);
+  const { board, updateColumn } = useBoardStore();
+  const col = board?.cols.find((c) => c.id === columnId);
 
   const { control, handleSubmit } = useForm<{ title: string }>({
     defaultValues: {
