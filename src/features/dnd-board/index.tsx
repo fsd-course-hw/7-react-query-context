@@ -6,3 +6,5 @@ export { boardDepsContext } from "./deps";
 export { useSaveBoard } from "./model/use-save-board";
 export { useBoard } from "./model/use-board";
 export { useBoardStoreFactory } from "./model/use-board-store-factory";
+export { BoardSearch } from "./ui/board-search";
+export { BoardSearchProvider } from "./model/board-search.store";

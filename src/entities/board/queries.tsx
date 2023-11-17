@@ -23,3 +23,18 @@ export const useInvaliateBoardsList = () => {
       queryKey: [boardQueryKey, "list"],
     });
 };
+
+export const useInvalidateBoardByID = () => {
+  const queryClient = useQueryClient();
+
+  return async (id: string) => {
+    Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: [boardQueryKey, "list"],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [boardQueryKey, "byId", id],
+      }),
+    ]);
+  };
+};

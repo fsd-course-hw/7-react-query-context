@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { useBoardStore } from "../../model/use-board-store";
 import { BoardCard, BoardCol } from "../../model/types";
+import { useBoardSearch } from "../../model/board-search.store";
 
 export function BoardCards({
   col,
@@ -49,6 +50,11 @@ function BoardCardComponent({
   colId: string;
 }) {
   const { updateBoardCard, removeBoardCard } = useBoardStore();
+  const { query } = useBoardSearch();
+
+  if (card.title.toLowerCase().indexOf(query.toLowerCase()) === -1) {
+    return null;
+  }
 
   return (
     <Draggable draggableId={card.id} index={index} key={card.id}>
