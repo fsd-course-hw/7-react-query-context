@@ -1,9 +1,6 @@
+import { BoardUser } from "../model/types.tsx"
 import { useBoardStore } from "../model/use-board-store";
-import { useGetUserById } from "./use-get-user-by-id"
-
-type BoardUser = {
-  id: string;
-}
+import { useGetUserById } from "./use-get-user-by-id";
 
 type UseBoardUsersReturn = {
   owner: BoardUser | null;
