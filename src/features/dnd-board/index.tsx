@@ -1,9 +1,12 @@
 export { BoardActions } from "./ui/board-actions";
 export { Board } from "./ui/board/board";
-export { BoardUsers } from "./ui/board-users/board-users"
+export { BoardUsers } from "./ui/board-users/board-users";
+export { BoardSearchBar } from "./ui/board-search-bar/board-search-bar";
 export type { Board as BoardType } from "./model/types";
 export { boardStoreContext, useBoardStore } from "./model/use-board-store";
 export { boardDepsContext } from "./deps";
 export { useSaveBoard } from "./model/use-save-board";
 export { useBoard } from "./model/use-board";
 export { useBoardStoreFactory } from "./model/use-board-store-factory";
+export { useBoardSearchStoreFactory } from "./model/use-board-search-store-factory";
+export { boardSearchStoreContext, useBoardSearchStore} from "./model/use-board-search-store";

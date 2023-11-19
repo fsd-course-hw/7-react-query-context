@@ -156,6 +156,6 @@ export const useBoardStoreFactory = (initalBoard: Board): BoardStore => {
     updateBoardCard,
     moveBoardCard,
     addBoardCard,
-    updateBoardEditors
+    updateBoardEditors,
   };
 };
