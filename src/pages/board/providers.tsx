@@ -1,17 +1,19 @@
+import { memo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { listToRecord } from "@/shared/lib/record";
 import { usersListQuery } from "@/entities/user";
 import {
   BoardType,
   boardDepsContext,
   boardStoreContext,
+  boardSearchStoreContext,
   useBoardStoreFactory,
+  useBoardSearchStoreFactory
 } from "@/features/dnd-board";
 import {
   updateTaskModalDeps,
   useUpdateTaskModal,
 } from "@/features/update-task-modal";
-import { listToRecord } from "@/shared/lib/record";
-import { useQuery } from "@tanstack/react-query";
-import { memo } from "react";
 
 export function TaskEditorProvider({
   children,
@@ -76,5 +78,20 @@ export const BoardStoreProvider = memo(function BoardStoreProvider({
     <boardStoreContext.Provider value={boardStore}>
       {children}
     </boardStoreContext.Provider>
+  );
+});
+
+export const BoardSearchStoreProvider = memo(function BoardStoreProvider({
+  children,
+  query = '',
+}: {
+  children?: React.ReactNode;
+  query?: string;
+}) {
+  const boardSearchStore = useBoardSearchStoreFactory(query);
+  return (
+    <boardSearchStoreContext.Provider value={boardSearchStore}>
+      {children}
+    </boardSearchStoreContext.Provider>
   );
 });

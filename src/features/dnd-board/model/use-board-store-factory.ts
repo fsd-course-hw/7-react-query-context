@@ -138,6 +138,14 @@ export const useBoardStoreFactory = (initalBoard: Board): BoardStore => {
     );
   };
 
+  const updateBoardEditors: BoardStore["updateBoardEditors"] = async (editorsIds: string[]) => {
+    setBoard(
+      produce((draft) => {
+        draft.editorsIds = editorsIds;
+      })
+    );
+  }
+
   return {
     board,
     addColumn,
@@ -148,5 +156,6 @@ export const useBoardStoreFactory = (initalBoard: Board): BoardStore => {
     updateBoardCard,
     moveBoardCard,
     addBoardCard,
+    updateBoardEditors,
   };
 };

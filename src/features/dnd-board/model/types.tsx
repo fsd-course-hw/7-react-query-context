@@ -33,3 +33,9 @@ export type UpdateBoardData = {
   ownerId?: string;
   editorsIds?: string[];
 };
+
+export type BoardUser = {
+  id: string;
+  name: string;
+  avatarId: string;
+}

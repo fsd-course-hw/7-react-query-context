@@ -1,11 +1,13 @@
 import clsx from "clsx";
-import { BoardColumn } from "./board-column";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { BoardColumn } from "./board-column";
 import { useBoardStore } from "../..";
+import { useShownBoard } from "../../lib/use-shown-board";
 
 export function Board({ className }: { className?: string }) {
-  const { board, moveColumn, moveBoardCard } = useBoardStore();
-  const columns = board.cols;
+  const { moveColumn, moveBoardCard } = useBoardStore();
+  const shownBoard = useShownBoard();
+  const columns = shownBoard.cols;
 
   return (
     <DragDropContext

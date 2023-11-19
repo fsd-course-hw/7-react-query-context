@@ -16,6 +16,8 @@ export type BoardStore = {
     start: { colId: string; index: number },
     end: { colId: string; index: number },
   ) => Promise<void>;
+
+  updateBoardEditors: (editorsIds: string[]) => Promise<void>;
 };
 
 export const boardStoreContext = createStrictContext<BoardStore>();
